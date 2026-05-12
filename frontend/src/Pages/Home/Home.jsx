@@ -53,7 +53,7 @@ const Home = () => {
               marginTop: "1rem",
             }}
           >
-            Dheeraj's App
+          Dheeraj's App
           </Title>
 
           <Text
