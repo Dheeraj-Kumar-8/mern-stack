@@ -61,6 +61,22 @@ export const loginWithGoogle = async (req, res) => {
                 console.log("Error occurred while creating the user in mongodb in loginWithGoogle", error.message);
                 return res.status(500).json({ status: "INTERNAL_SERVER_ERROR", message: "Something went wrong while creating the user."});
             }
+        } else {
+            // Update user info on subsequent logins to keep profile data fresh from Google
+            console.log("User found. Updating profile data from Google account.");
+            try {
+                user = await userModel.findByIdAndUpdate(
+                    user._id,
+                    {
+                        name: `${firstName} ${lastName ?? ""}`.trim(),
+                        avatar: picture
+                    },
+                    { new: true }
+                );
+            } catch (error) {
+                console.log("Error updating user profile:", error.message);
+                // Continue with existing user data if update fails
+            }
         } 
 
         console.log("Generating the jwt token for user.");
